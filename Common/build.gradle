@@ -1,0 +1,27 @@
+dependencies {
+    // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
+    // Do NOT use other classes from fabric loader
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+
+    modImplementation "com.cerbon:cerbons_api-common-${minecraft_version}:${cerbons_api_version}"
+
+    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${mixin_extras_version}")))
+}
+
+architectury {
+    common("forge", "fabric", "neoforge")
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/${mod_id}.accesswidener")
+}
+
+sourcesJar {
+    exclude "architectury.common.json"
+}
+
+remapJar {
+    inputFile.set shadowJar.archiveFile
+    dependsOn shadowJar
+    archiveClassifier.set(null)
+}
