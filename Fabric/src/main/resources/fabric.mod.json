@@ -18,10 +18,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.cerbon.ml_template.fabric.ModNameFabric"
+      "com.cerbon.beautiful_potions.fabric.BeautifulPotionsFabric"
     ],
     "client": [
-      "com.cerbon.ml_template.fabric.ModNameFabric"
+      "com.cerbon.beautiful_potions.fabric.BeautifulPotionsFabric"
     ]
   },
   "mixins": [

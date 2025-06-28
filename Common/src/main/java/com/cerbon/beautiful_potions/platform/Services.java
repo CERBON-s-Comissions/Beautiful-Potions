@@ -1,6 +1,6 @@
-package com.cerbon.ml_template.platform;
+package com.cerbon.beautiful_potions.platform;
 
-import com.cerbon.ml_template.ModName;
+import com.cerbon.beautiful_potions.BeautifulPotions;
 
 import java.util.ServiceLoader;
 
@@ -10,7 +10,7 @@ public class Services {
         final T loadedService = ServiceLoader.load(clazz)
                 .findFirst()
                 .orElseThrow(() -> new NullPointerException("Failed to load service for " + clazz.getName()));
-        ModName.LOGGER.debug("Loaded {} for service {}", loadedService, clazz);
+        BeautifulPotions.LOGGER.debug("Loaded {} for service {}", loadedService, clazz);
         return loadedService;
     }
 }

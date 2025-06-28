@@ -1,7 +1,7 @@
-package com.cerbon.ml_template.mixin.test;
+package com.cerbon.beautiful_potions.mixin.test;
 
 import com.cerbon.cerbons_api.api.static_utilities.MiscUtils;
-import com.cerbon.ml_template.ModName;
+import com.cerbon.beautiful_potions.BeautifulPotions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.main.GameConfig;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,6 +15,6 @@ public abstract class TestMixin {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void sendMessageIfWorking(GameConfig gameConfig, CallbackInfo ci) {
-        ModName.LOGGER.info("Common mixins are working for {} on {}!",  ModName.MOD_NAME, MiscUtils.getPlatformName());
+        BeautifulPotions.LOGGER.info("Common mixins are working for {} on {}!",  BeautifulPotions.MOD_NAME, MiscUtils.getPlatformName());
     }
 }

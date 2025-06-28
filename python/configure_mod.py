@@ -168,8 +168,8 @@ def configure_neoforge(mod_id: str, mod_name: str):
 
 
 if __name__ == "__main__":
-    mod_id = "bclib"
-    mod_name = "Bclib"
+    mod_id = "beautiful_potions"
+    mod_name = "BeautifulPotions"
 
     configure_common(mod_id, mod_name)
     configure_fabric(mod_id, mod_name)
