@@ -6,7 +6,5 @@ import net.minecraftforge.fml.common.Mod;
 @Mod(BeautifulPotions.MOD_ID)
 public class BeautifulPotionsForge {
 
-    public BeautifulPotionsForge() {
-        BeautifulPotions.init();
-    }
+    public BeautifulPotionsForge() {}
 }

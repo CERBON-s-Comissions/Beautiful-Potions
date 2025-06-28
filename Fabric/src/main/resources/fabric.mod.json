@@ -17,9 +17,6 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "com.cerbon.beautiful_potions.fabric.BeautifulPotionsFabric"
-    ],
     "client": [
       "com.cerbon.beautiful_potions.fabric.BeautifulPotionsFabric"
     ]
