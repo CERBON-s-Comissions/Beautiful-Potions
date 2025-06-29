@@ -34,7 +34,7 @@ subprojects {
 
         compileOnly annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}")
 
-        modCompileOnlyApi "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+        //modCompileOnlyApi "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
     }
 
     sourceSets.main.resources { srcDir 'src/main/generated' }

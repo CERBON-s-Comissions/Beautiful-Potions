@@ -2,41 +2,41 @@ package com.cerbon.beautiful_potions.mixin;
 
 import com.cerbon.beautiful_potions.platform.Services;
 import com.cerbon.beautiful_potions.potion.PotionType;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.renderer.ItemModelShaper;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.item.MissingItemModel;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ItemRenderer.class)
+@Mixin(ItemModelResolver.class)
 public class ItemRendererMixin {
 
-    @Shadow
-    private @Final ItemModelShaper itemModelShaper;
-
-    @WrapOperation(method="getModel", at=@At(value="INVOKE", target="Lnet/minecraft/client/renderer/ItemModelShaper;getItemModel(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/client/resources/model/BakedModel;"))
-    private BakedModel getModel(ItemModelShaper instance, ItemStack stack, Operation<BakedModel> original) {
-        if (!(stack.getItem() instanceof PotionItem)) return original.call(instance, stack);
+    @Inject(method = "appendItemLayers", at = @At(value = "INVOKE", target = "Ljava/util/function/Function;apply(Ljava/lang/Object;)Ljava/lang/Object;"), cancellable = true)
+    private void appendItemLayers(ItemStackRenderState renderState, ItemStack stack, ItemDisplayContext displayContext, Level level, LivingEntity entity, int seed, CallbackInfo ci) {
+        if (!(stack.getItem() instanceof PotionItem)) return;
 
         PotionContents potionContents = stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
 
         if (potionContents.potion().isPresent()) {
             Potion potion = potionContents.potion().get().value();
             ResourceLocation potionRL = BuiltInRegistries.POTION.getKey(potion);
-            if (potionRL == null) return original.call(instance, stack);
+            if (potionRL == null) return;
 
             PotionType potionType = PotionType.get(stack);
             String potionNamespace = potionRL.getNamespace();
@@ -49,14 +49,14 @@ public class ItemRendererMixin {
             ResourceLocation modelLocation = ResourceLocation.tryParse(modelPath);
 
             if (modelLocation != null) {
-                ModelManager modelManager = itemModelShaper.getModelManager();
+                ItemModel model = Services.PLATFORM.getItemModel(modelLocation, Minecraft.getInstance().getModelManager());
 
-                BakedModel model = Services.PLATFORM.getItemModel(modelLocation, modelManager);
-                return model != null && model != modelManager.getMissingModel() ? model : original.call(instance, stack);
+                if (model != null && !(model instanceof MissingItemModel)) {
+                    model.update(renderState, stack, (ItemModelResolver) (Object) this, displayContext, level instanceof ClientLevel clientLevel ? clientLevel : null, entity, seed);
+                    ci.cancel();
+                }
             }
         }
-
-        return original.call(instance, stack);
     }
 
     @Unique
