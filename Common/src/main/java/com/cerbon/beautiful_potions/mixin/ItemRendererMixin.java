@@ -8,13 +8,12 @@ import net.minecraft.client.renderer.ItemModelShaper;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -31,29 +30,24 @@ public class ItemRendererMixin {
     private BakedModel getModel(ItemModelShaper instance, ItemStack stack, Operation<BakedModel> original) {
         if (!(stack.getItem() instanceof PotionItem)) return original.call(instance, stack);
 
-        PotionContents potionContents = stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+        Potion potion = PotionUtils.getPotion(stack);
+        ResourceLocation potionRL = BuiltInRegistries.POTION.getKey(potion);
 
-        if (potionContents.potion().isPresent()) {
-            Potion potion = potionContents.potion().get().value();
-            ResourceLocation potionRL = BuiltInRegistries.POTION.getKey(potion);
-            if (potionRL == null) return original.call(instance, stack);
+        PotionType potionType = PotionType.get(stack);
+        String potionNamespace = potionRL.getNamespace();
+        String potionId = potionRL.getPath();
 
-            PotionType potionType = PotionType.get(stack);
-            String potionNamespace = potionRL.getNamespace();
-            String potionId = potionRL.getPath();
+        String basePotionId = getBasePotionId(potionId);
+        String variant = getPotionVariant(potionId, potionType);
 
-            String basePotionId = getBasePotionId(potionId);
-            String variant = getPotionVariant(potionId, potionType);
+        String modelPath = potionNamespace + ":" + basePotionId + "/" + variant;
+        ResourceLocation modelLocation = ResourceLocation.tryParse(modelPath);
 
-            String modelPath = potionNamespace + ":" + basePotionId + "/" + variant;
-            ResourceLocation modelLocation = ResourceLocation.tryParse(modelPath);
+        if (modelLocation != null) {
+            ModelManager modelManager = itemModelShaper.getModelManager();
 
-            if (modelLocation != null) {
-                ModelManager modelManager = itemModelShaper.getModelManager();
-
-                BakedModel model = Services.PLATFORM.getItemModel(modelLocation, modelManager);
-                return model != null && model != modelManager.getMissingModel() ? model : original.call(instance, stack);
-            }
+            BakedModel model = Services.PLATFORM.getItemModel(modelLocation, modelManager);
+            return model != null && model != modelManager.getMissingModel() ? model : original.call(instance, stack);
         }
 
         return original.call(instance, stack);
