@@ -24,7 +24,7 @@ dependencies {
     forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     // Forge Dependencies
-    modImplementation "com.cerbon:cerbons_api-forge-${minecraft_version}:${cerbons_api_version}"
+    //modImplementation "com.cerbon:cerbons_api-forge-${minecraft_version}:${cerbons_api_version}"
 
     implementation include("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}")
 
