@@ -4,6 +4,7 @@
   "package": "com.cerbon.beautiful_potions.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "PotionContentsMixin"
   ],
   "client": [
     "ItemRendererMixin",
