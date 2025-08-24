@@ -3,6 +3,7 @@ package com.cerbon.beautiful_potions.mixin;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
@@ -14,10 +15,12 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ItemColors.class)
 public abstract class ItemColorsMixin {
 
+    //TODO: Allow it to work for any namespace the mod supports
     @Redirect(method = "createDefault", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/color/item/ItemColors;register(Lnet/minecraft/client/color/item/ItemColor;[Lnet/minecraft/world/level/ItemLike;)V", ordinal = 4))
     private static void removeColorFromPotions(ItemColors instance, ItemColor itemColor, ItemLike[] items) {
         instance.register(
-                (itemStack, i) -> i > 0 ? -1 : FastColor.ARGB32.opaque(itemStack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).getColor()),
+                (itemStack, i) -> i > 0 || BuiltInRegistries.ITEM.getKey(itemStack.getItem()).getNamespace().equals("minecraft") ? -1 : FastColor.ARGB32.opaque(itemStack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).getColor()),
+                Items.POTION,
                 Items.TIPPED_ARROW
         );
     }
