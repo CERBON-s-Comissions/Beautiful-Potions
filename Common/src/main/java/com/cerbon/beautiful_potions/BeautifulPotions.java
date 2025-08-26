@@ -14,6 +14,8 @@ public class BeautifulPotions {
 
 	public static final String MODEL_PREFIX = "item/potion";
 
+    public static final HashSet<String> POTION_NAMESPACES = new HashSet<>();
+
 	public static final Logger LOGGER = LogUtils.getLogger();
 
 	public static Set<ResourceLocation> findCITs(ResourceManager manager) {
@@ -25,6 +27,7 @@ public class BeautifulPotions {
 			String path = resourceLocation.getPath();
 			path = path.substring(folder.length()+1, path.length()-".json".length());
 			variantIds.add(ResourceLocation.tryBuild(resourceLocation.getNamespace(), path));
+            POTION_NAMESPACES.add(resourceLocation.getNamespace());
 		}
 		return variantIds;
 	}
