@@ -17,7 +17,7 @@ subprojects {
     apply plugin: "com.github.johnrengelman.shadow"
 
     base {
-        archivesBaseName = archives_base_name + "-${projectDir.canonicalFile.name}-${minecraft_version}"
+        archivesName  = archives_base_name + "-${projectDir.canonicalFile.name}-${minecraft_version}"
     }
 
     loom {
@@ -136,7 +136,7 @@ subprojects {
 
         gameVersions = game_versions.replaceAll(" ", "").split(",") as Iterable<? extends String>
 
-        versionName = project.base.archivesBaseName + "-" + mod_version
+        versionName = "$project.base.archivesName  + "-" + $mod_version"
         versionNumber = mod_version
         versionType = release_type
 

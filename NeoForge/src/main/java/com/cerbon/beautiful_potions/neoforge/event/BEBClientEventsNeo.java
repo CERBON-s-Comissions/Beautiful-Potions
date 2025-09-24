@@ -14,12 +14,13 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.model.standalone.SimpleUnbakedStandaloneModel;
 import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 
 import java.util.List;
 import java.util.Set;
 
-@EventBusSubscriber(modid = BeautifulPotions.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = BeautifulPotions.MOD_ID, value = Dist.CLIENT)
 public class BEBClientEventsNeo {
 
     @SubscribeEvent
@@ -31,15 +32,15 @@ public class BEBClientEventsNeo {
         for (ResourceLocation id : potionIds) {
             ResourceLocation model = id.withPrefix(BeautifulPotions.MODEL_PREFIX + "/");
 
-            StandaloneModelKey<ItemModel> key = new StandaloneModelKey<>(model);
+            StandaloneModelKey<ItemModel> key = new StandaloneModelKey<>(model::toString);
             BeautifulPotionsNeo.REGISTERED_MODELS.putIfAbsent(id, key);
 
-            event.register(key, (resolvedModel, modelBaker) -> {
+            event.register(key, new SimpleUnbakedStandaloneModel<>(model, (resolvedModel, modelBaker) -> {
                 TextureSlots textureSlots = resolvedModel.getTopTextureSlots();
                 List<BakedQuad> list = resolvedModel.bakeTopGeometry(textureSlots, modelBaker, BlockModelRotation.X0_Y0).getAll();
                 ModelRenderProperties modelRenderProperties = ModelRenderProperties.fromResolvedModel(modelBaker, resolvedModel, textureSlots);
                 return new BlockModelWrapper(List.of(), list, modelRenderProperties);
-            });
+            }));
         }
     }
 }
