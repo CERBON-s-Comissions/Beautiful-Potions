@@ -1,0 +1,6 @@
+{
+    "parent": "minecraft:item/generated",
+    "textures": {
+        "layer0": "benssharks:item/potion/potion_of_sealing/linger"
+    }
+}

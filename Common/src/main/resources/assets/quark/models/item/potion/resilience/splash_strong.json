@@ -1,0 +1,6 @@
+{
+    "parent": "minecraft:item/generated",
+    "textures": {
+        "layer0": "quark:item/potion/resilience/splash_strong"
+    }
+}

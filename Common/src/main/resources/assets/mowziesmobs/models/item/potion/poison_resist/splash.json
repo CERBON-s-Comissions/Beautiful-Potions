@@ -1,0 +1,6 @@
+{
+    "parent": "minecraft:item/generated",
+    "textures": {
+        "layer0": "mowziesmobs:item/potion/poison_resist/splash"
+    }
+}
