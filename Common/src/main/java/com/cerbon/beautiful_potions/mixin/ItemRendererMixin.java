@@ -4,13 +4,11 @@ import com.cerbon.beautiful_potions.platform.Services;
 import com.cerbon.beautiful_potions.potion.PotionType;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelShaper;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
@@ -44,7 +42,7 @@ public class ItemRendererMixin {
 
         String modelPath = potionNamespace + ":" + basePotionId + "/" + variant;
         ResourceLocation modelLocation = ResourceLocation.tryParse(modelPath);
-        Minecraft.getInstance().player.displayClientMessage(Component.literal(modelPath), false);
+        //Minecraft.getInstance().player.displayClientMessage(Component.literal(modelPath), false);
 
         if (modelLocation != null) {
             ModelManager modelManager = itemModelShaper.getModelManager();
@@ -68,6 +66,12 @@ public class ItemRendererMixin {
         else if (potionId.startsWith("extra_long_"))
             return potionId.substring(11);
 
+        else if (potionId.endsWith("_long"))
+            return potionId.substring(0, potionId.length() - 5);
+
+        else if (potionId.endsWith("_strong"))
+            return potionId.substring(0, potionId.length() - 7);
+
         return potionId;
     }
 
@@ -75,10 +79,10 @@ public class ItemRendererMixin {
     private String getPotionVariant(String potionId, PotionType potionType) {
         String typeString = potionType.toString().toLowerCase();
 
-        if (potionId.startsWith("long_"))
+        if (potionId.startsWith("long_") || potionId.endsWith("_long"))
             return typeString + "_long";
 
-        else if (potionId.startsWith("strong_"))
+        else if (potionId.startsWith("strong_") || potionId.endsWith("_strong"))
             return typeString + "_strong";
 
         else if (potionId.startsWith("extra_long_"))
