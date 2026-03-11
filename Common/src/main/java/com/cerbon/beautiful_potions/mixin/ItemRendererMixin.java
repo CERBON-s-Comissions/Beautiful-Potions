@@ -4,11 +4,13 @@ import com.cerbon.beautiful_potions.platform.Services;
 import com.cerbon.beautiful_potions.potion.PotionType;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelShaper;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
@@ -42,6 +44,7 @@ public class ItemRendererMixin {
 
         String modelPath = potionNamespace + ":" + basePotionId + "/" + variant;
         ResourceLocation modelLocation = ResourceLocation.tryParse(modelPath);
+        Minecraft.getInstance().player.displayClientMessage(Component.literal(modelPath), false);
 
         if (modelLocation != null) {
             ModelManager modelManager = itemModelShaper.getModelManager();
@@ -62,6 +65,9 @@ public class ItemRendererMixin {
         else if (potionId.startsWith("strong_"))
             return potionId.substring(7);
 
+        else if (potionId.startsWith("extra_long_"))
+            return potionId.substring(11);
+
         return potionId;
     }
 
@@ -74,6 +80,9 @@ public class ItemRendererMixin {
 
         else if (potionId.startsWith("strong_"))
             return typeString + "_strong";
+
+        else if (potionId.startsWith("extra_long_"))
+            return typeString + "_extra_long";
 
         else return typeString.equals("normal") ? "normal" : typeString;
     }
