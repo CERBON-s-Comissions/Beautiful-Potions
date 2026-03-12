@@ -1,6 +1,0 @@
-{
-    "parent": "minecraft:item/generated",
-    "textures": {
-        "layer0": "potionsmaster:item/potion/emerald_sight/splash"
-    }
-}

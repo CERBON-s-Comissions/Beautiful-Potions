@@ -47,6 +47,7 @@ public class ItemRendererMixin {
 
             String modelPath = potionNamespace + ":" + basePotionId + "/" + variant;
             ResourceLocation modelLocation = ResourceLocation.tryParse(modelPath);
+            //Minecraft.getInstance().player.displayClientMessage(Component.literal(modelPath), false);
 
             if (modelLocation != null) {
                 ModelManager modelManager = itemModelShaper.getModelManager();
