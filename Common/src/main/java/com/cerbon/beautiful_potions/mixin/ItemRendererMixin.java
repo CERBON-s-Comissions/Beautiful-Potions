@@ -10,8 +10,8 @@ import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.item.MissingItemModel;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
@@ -27,15 +27,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ItemModelResolver.class)
 public class ItemRendererMixin {
 
-    @Inject(method = "appendItemLayers", at = @At(value = "INVOKE", target = "Ljava/util/function/Function;apply(Ljava/lang/Object;)Ljava/lang/Object;"), cancellable = true)
-    private void appendItemLayers(ItemStackRenderState renderState, ItemStack stack, ItemDisplayContext displayContext, Level level, LivingEntity entity, int seed, CallbackInfo ci) {
+    @Inject(method = "appendItemLayers", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/item/ItemModelResolver;getItemModel(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/item/ItemModel;"), cancellable = true)
+    private void appendItemLayers(ItemStackRenderState renderState, ItemStack stack, ItemDisplayContext displayContext, Level level, ItemOwner owner, int seed, CallbackInfo ci) {
         if (!(stack.getItem() instanceof PotionItem)) return;
 
         PotionContents potionContents = stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
 
         if (potionContents.potion().isPresent()) {
             Potion potion = potionContents.potion().get().value();
-            ResourceLocation potionRL = BuiltInRegistries.POTION.getKey(potion);
+            Identifier potionRL = BuiltInRegistries.POTION.getKey(potion);
             if (potionRL == null) return;
 
             PotionType potionType = PotionType.get(stack);
@@ -46,13 +46,13 @@ public class ItemRendererMixin {
             String variant = getPotionVariant(potionId, potionType);
 
             String modelPath = potionNamespace + ":" + basePotionId + "/" + variant;
-            ResourceLocation modelLocation = ResourceLocation.tryParse(modelPath);
+            Identifier modelLocation = Identifier.tryParse(modelPath);
 
             if (modelLocation != null) {
                 ItemModel model = Services.PLATFORM.getItemModel(modelLocation, Minecraft.getInstance().getModelManager());
 
                 if (model != null && !(model instanceof MissingItemModel)) {
-                    model.update(renderState, stack, (ItemModelResolver) (Object) this, displayContext, level instanceof ClientLevel clientLevel ? clientLevel : null, entity, seed);
+                    model.update(renderState, stack, (ItemModelResolver) (Object) this, displayContext, level instanceof ClientLevel clientLevel ? clientLevel : null, owner, seed);
                     ci.cancel();
                 }
             }

@@ -47,12 +47,12 @@ shadowJar {
     archiveClassifier.set("dev-shadow")
 }
 
-remapJar {
-    inputFile.set shadowJar.archiveFile
-    dependsOn shadowJar
-    archiveClassifier.set(null)
-    atAccessWideners.add("${mod_id}.accesswidener")
-}
+//remapJar {
+//    inputFile.set shadowJar.archiveFile
+//    dependsOn shadowJar
+//    archiveClassifier.set(null)
+//    atAccessWideners.add("${mod_id}.accesswidener")
+//}
 
 jar {
     archiveClassifier.set("dev")

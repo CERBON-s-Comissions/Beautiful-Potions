@@ -1,7 +1,7 @@
 package com.cerbon.beautiful_potions;
 
 import com.mojang.logging.LogUtils;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.slf4j.Logger;
 
@@ -16,15 +16,15 @@ public class BeautifulPotions {
 
 	public static final Logger LOGGER = LogUtils.getLogger();
 
-	public static Set<ResourceLocation> findCITs(ResourceManager manager) {
-		Set<ResourceLocation> variantIds = new HashSet<>();
+	public static Set<Identifier> findCITs(ResourceManager manager) {
+		Set<Identifier> variantIds = new HashSet<>();
 
 		String folder = "models/" + MODEL_PREFIX;
 
-		for (ResourceLocation resourceLocation : manager.listResources(folder, rl -> rl.getPath().endsWith(".json")).keySet()) {
+		for (Identifier resourceLocation : manager.listResources(folder, rl -> rl.getPath().endsWith(".json")).keySet()) {
 			String path = resourceLocation.getPath();
 			path = path.substring(folder.length()+1, path.length()-".json".length());
-			variantIds.add(ResourceLocation.tryBuild(resourceLocation.getNamespace(), path));
+			variantIds.add(Identifier.tryBuild(resourceLocation.getNamespace(), path));
 		}
 		return variantIds;
 	}
