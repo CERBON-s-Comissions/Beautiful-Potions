@@ -1,13 +1,13 @@
 package com.cerbon.beautiful_potions.fabric;
 
 import com.cerbon.beautiful_potions.BeautifulPotions;
+import com.cerbon.beautiful_potions.fabric.mixin.ICuboidItemModelWrapper;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.PreparableModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.SimpleUnbakedExtraModel;
 import net.minecraft.client.renderer.block.dispatch.BlockModelRotation;
-import net.minecraft.client.renderer.item.CuboidItemModelWrapper;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.resources.model.geometry.QuadCollection;
@@ -46,7 +46,7 @@ public class BeautifulPotionsFabric implements ClientModInitializer, PreparableM
                 TextureSlots textureSlots = resolvedModel.getTopTextureSlots();
                 QuadCollection list = resolvedModel.bakeTopGeometry(textureSlots, modelBaker, BlockModelRotation.IDENTITY);
                 ModelRenderProperties modelRenderProperties = ModelRenderProperties.fromResolvedModel(modelBaker, resolvedModel, textureSlots);
-                return new CuboidItemModelWrapper(List.of(), list, modelRenderProperties, new Matrix4f());
+                return ICuboidItemModelWrapper.invokeConstructor(List.of(), list, modelRenderProperties, new Matrix4f());
             }));
         }
     }
