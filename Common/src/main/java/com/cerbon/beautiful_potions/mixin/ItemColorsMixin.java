@@ -7,6 +7,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
+import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
@@ -31,8 +32,7 @@ public abstract class ItemColorsMixin {
                     if (potionRL == null) return -1;
 
                     String potionNamespace = potionRL.getNamespace();
-
-                    return i > 0 || BeautifulPotions.POTION_NAMESPACES.contains(potionNamespace) ? -1 : FastColor.ARGB32.opaque(potionContents.getColor());
+                    return i > 0 || (BeautifulPotions.POTION_NAMESPACES.contains(potionNamespace) && !(itemStack.getItem() instanceof ArrowItem)) ? -1 : FastColor.ARGB32.opaque(potionContents.getColor());
                 },
                 Items.POTION,
                 Items.SPLASH_POTION,
